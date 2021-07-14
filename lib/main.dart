@@ -69,7 +69,6 @@ class _HomeState extends State<Home> {
                       width: double.infinity,
                       child: Text(
                         input,
-                        textDirection: TextDirection.rtl,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 48, color: Colors.white),
                       ),
@@ -116,6 +115,11 @@ class _HomeState extends State<Home> {
                     // +/- button
                     else if (index == 1) {
                       return MyButton(
+                        buttontapped: () {
+                          setState(() {
+                            plusminusPressed();
+                          });
+                        },
                         buttonText: buttons[index],
                         color: Colors.black,
                         textColor: Colors.white,
@@ -200,13 +204,22 @@ class _HomeState extends State<Home> {
   }
 
 // function to calculate the input operation
-  void equalPressed() {
+  double calc(){
     String finalinput = input;
     finalinput = input.replaceAll('x', '*');
     Parser p = Parser();
     Expression exp = p.parse(finalinput);
     ContextModel cm = ContextModel();
     double eval = exp.evaluate(EvaluationType.REAL, cm);
+    return eval;
+  }
+  void equalPressed() {
+    double eval = calc();
     answer = eval.toString();
+  }
+  void plusminusPressed() {
+    double eval = calc();
+    double neg = 0-eval;
+    input = neg.toString();
   }
 }
